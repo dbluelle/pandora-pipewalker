@@ -37,5 +37,6 @@ using namespace std;
 #include <SDL/SDL.h>
 
 
-#define PW_SCREEN_WIDTH		520	///< Initial screen (main window) width
-#define PW_SCREEN_HEIGHT	620	///< Initial screen (main window) height
+#define PW_SCREEN_WIDTH		400 //520	///< Initial screen (main window) width
+#define PW_SCREEN_HEIGHT	480 //620	///< Initial screen (main window) height
+#define PW_STARTX 200 
