@@ -19,8 +19,15 @@
 #include "render.h"
 #include "image.h"
 #include "loading_xpm.h"
+#include "common.h"
+#if USE_OPENGLES
+#include <GLES/gl.h>
+#include "eglport.h"
+#define GL_CLAMP GL_CLAMP_TO_EDGE
+#define glOrtho glOrthof
+#else
 #include <GL/gl.h>
-
+#endif
 #define CHARACTERS_NUM 96
 #define FONT_TEX_COL   16
 #define FONT_TEX_ROW   8
@@ -171,7 +178,7 @@ bool render::load(const char* file_name)
 
 void render::on_window_resize(const int width, const int height) const
 {
-	glViewport(0, 0, width, height);
+	glViewport(PW_STARTX, 0, width, height);
 }
 
 
@@ -238,7 +245,11 @@ void render::draw_cell_field(const short cell_count, const float alpha) const
 
 void render::draw_end() const
 {
+#ifdef USE_OPENGLES
+		EGL_SwapBuffers();
+#else
 		SDL_GL_SwapBuffers();
+#endif
 
 		assert(check_GL_error());
 
@@ -361,7 +372,11 @@ void render::show_loading()
 	glVertexPointer(2, GL_FLOAT, 0, vert);
 	glTexCoordPointer(2, GL_SHORT, 0, tex);
 	glDrawElements(GL_TRIANGLES, sizeof(ind) / sizeof(ind[0]), GL_UNSIGNED_SHORT, ind);
+#ifdef USE_OPENGLES
+	EGL_SwapBuffers();
+#else
 	SDL_GL_SwapBuffers();
+#endif
 
 	assert(check_GL_error());
 }

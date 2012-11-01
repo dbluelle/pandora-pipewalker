@@ -33,6 +33,9 @@ LRESULT pw_win32_wnd_proc(HWND wnd, UINT msg, WPARAM w_param, LPARAM l_param);
 #endif // WIN32
 
 
+#ifdef USE_OPENGLES
+#include "eglport.h"
+#endif
 /**
  * Parse command line parameters
  * \param argc number of parameters
@@ -67,7 +70,12 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "Critical error\nSDL_Init failed: %s\n", SDL_GetError());
 		return 1;
 	}
-
+#ifdef USE_OPENGLES
+       	if (EGL_Open()){
+		fprintf(stderr, "Critical error\nUnable to open egl\n");
+		return 1;
+	}
+#endif
 	//Let's get some video information
 	const SDL_VideoInfo* vinfo = SDL_GetVideoInfo();
 	if (!vinfo) {
@@ -84,10 +92,20 @@ int main(int argc, char* argv[])
 	const int wnd_min_height = PW_SCREEN_HEIGHT / 3;
 
 	//Create window
+#if USE_OPENGLES
+	if (!SDL_SetVideoMode(800, 480, 0, SDL_FULLSCREEN)) {
+		fprintf(stderr, "Critical error\nUnable to set video mode: %s\n", SDL_GetError());
+		return 1;
+	}
+	int prevcursorstate=SDL_ShowCursor(SDL_QUERY);
+	SDL_ShowCursor(SDL_DISABLE);
+	EGL_Init();
+#else
 	if (!SDL_SetVideoMode(PW_SCREEN_WIDTH, PW_SCREEN_HEIGHT, 0, SDL_OPENGL | SDL_RESIZABLE)) {
 		fprintf(stderr, "Critical error\nUnable to set video mode: %s\n", SDL_GetError());
 		return 1;
 	}
+#endif
 	SDL_WM_SetCaption(PACKAGE_NAME, PACKAGE_NAME);
 	image wnd_icon;
 	if (wnd_icon.load_XPM(pipewalker_xpm, sizeof(pipewalker_xpm) / sizeof(pipewalker_xpm[0])))
@@ -127,7 +145,7 @@ int main(int argc, char* argv[])
 				{
 					Sint32 x, y;
 					SDL_GetMouseState(&x, &y);
-					game_instance.on_mouse_move(x, y);
+					game_instance.on_mouse_move(x-PW_STARTX, y);
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
@@ -181,6 +199,10 @@ int main(int argc, char* argv[])
 	}
 
 	game_instance.finalize();
+#if USE_OPENGLES
+	EGL_Close();
+	SDL_ShowCursor(prevcursorstate);
+#endif
 
 	SDL_Quit();
 	return 0;
