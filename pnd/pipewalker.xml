@@ -1,0 +1,48 @@
+<PXML xmlns="http://openpandora.org/namespaces/PXML">
+<package id="pipewalker">
+<version major="0" minor="9" release="4" build="20121101" type="release"/>
+<author name="dbluelle" />
+<titles>
+<title lang="en_US">
+PipeWalker
+</title>
+</titles>
+<descriptions>
+<description lang="en_US">
+This is a puzzle game in which you need to combine the components into a single circuit: connect all computers to a network server, bring water to the taps, etc.
+</description>
+</descriptions>
+<icon src="pipewalker.png"/>
+</package>
+<application id="pipewalker">
+<exec command="start.sh"/>
+<version major="0" minor="9" release="4" build="20121101" type="release"/>
+<osversion major="1" minor="0" release="0" build="0"/>
+<author name="dbluelle" />
+<titles>
+<title lang="en_US">
+PipeWalker
+</title>
+</titles>
+<title lang="en_US">
+PipeWalker
+</title>
+<descriptions>
+<description lang="en_US">
+This is a puzzle game in which you need to combine the components into a single circuit: connect all computers to a network server, bring water to the taps, etc.
+</description>
+</descriptions>
+<icon src="pipewalker.png"/>
+<licenses>
+<license name="GPL3+" />
+</licenses>
+<categories>
+ <category name="Game">
+    <subcategory name="LogicGame"/>
+  </category>
+ </categories>
+ <previewpics>
+  <pic src="screenshot.png"/>
+</previewpics>
+</application>
+</PXML>
