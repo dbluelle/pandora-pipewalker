@@ -18,7 +18,7 @@
 
 #include "cell.h"
 
-#define PW_ROTATE_TUBE_SPEED     300
+#define PW_ROTATE_TUBE_SPEED     200 //300
 
 
 cell::cell()

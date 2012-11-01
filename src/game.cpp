@@ -25,9 +25,8 @@
 #include <dirent.h>
 #endif //WIN32
 
-#define PW_SWAP_MODE_SPEED     500
+#define PW_SWAP_MODE_SPEED     200 //500
 #define PW_THEME_FILE_EXT      ".png"
-
 
 game::game()
 :	_need_redisplay(true),
@@ -48,6 +47,7 @@ game& game::instance()
 
 bool game::initialize(const unsigned long lvl_id, const level::size lvl_sz, const bool lvl_wrap)
 {
+
 	settings::load();
 	if (lvl_id)
 		settings::set_state(lvl_id, lvl_sz, lvl_wrap, "Dummy");
@@ -57,6 +57,7 @@ bool game::initialize(const unsigned long lvl_id, const level::size lvl_sz, cons
 	renderer.initialize();
 
 	//Load texture image
+	
 	string file_name = PW_GAMEDATADIR;
 	file_name += settings::theme();
 	file_name += PW_THEME_FILE_EXT;
