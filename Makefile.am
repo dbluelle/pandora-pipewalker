@@ -27,3 +27,11 @@ win32_make_dist.cmd:
 	@echo "call %ZIPTOOL% pipewalker-$(VERSION)-win32-portable.zip PipeWalker\*" >> win32_make_dist.cmd
 	@echo "rmdir /S /Q PipeWalker" >> win32_make_dist.cmd
 	@echo "call %NSITOOL% /DVERSION=$(VERSION) PipeWalker.nsi" >> win32_make_dist.cmd
+
+genpnd:
+	arm-angstrom-linux-gnueabi-strip src/pipewalker
+	cp data/*.png pnd/data_default/
+	cp data/*.wav pnd/data_default/
+	cp src/pipewalker pnd/
+	./pnd_make.sh -c -d pnd -p pipewalker.pnd -x pnd/pipewalker.xml -i pnd/pipewalker.png
+

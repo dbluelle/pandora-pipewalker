@@ -1,5 +1,6 @@
 bin_PROGRAMS = pipewalker
 pipewalker_SOURCES = \
+	eglport.cpp eglport.h \
 	button.cpp button.h \
 	cell.cpp cell.h \
 	common.h \

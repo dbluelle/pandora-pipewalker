@@ -36,7 +36,7 @@ AC_HEADER_STDC
 AC_HEADER_ASSERT
 AC_HEADER_DIRENT
 AC_CHECK_HEADER([SDL/SDL.h], [], [AC_MSG_ERROR(SDL/SDL.h header file not found)])
-AC_CHECK_HEADER([GL/gl.h], [], [AC_MSG_ERROR(GL/gl.h header file not found)])
+AC_CHECK_HEADER([GLES/gl.h], [], [AC_MSG_ERROR(GL/gl.h header file not found)])
 AS_IF([test "${WIN32}" = "yes"],
 	[AC_CHECK_HEADER([GdiPlus.h], [], [AC_MSG_ERROR(GdiPlus.h header file not found)])],
 	[AC_CHECK_HEADER([png.h], [], [AC_MSG_ERROR(png.h header file not found)])]
@@ -45,13 +45,15 @@ AC_CHECK_HEADERS(string map vector iterator fstream complex algorithm)
 
 # Checks for libraries
 AC_CHECK_LIB([SDL], [main], [], [AC_MSG_ERROR(SDL library not found)])
-AC_CHECK_LIB([GL], [main],
-	[OPENGL_LIBS="-lGL"],
+AC_CHECK_LIB([GLES_CM], [main],
+	[OPENGL_LIBS="-lGLES_CM -lEGL -lX11"],
 	[AC_CHECK_LIB(opengl32, main,
 		[OPENGL_LIBS="-lopengl32"],
 		[AC_MSG_ERROR(OpenGL library not found)]
 	])
 )
+CXXFLAGS="$CXXFLAGS -DUSE_OPENGLES"
+
 AS_IF([test "${WIN32}" = "yes"],
 	[AC_CHECK_LIB([gdiplus], [main], [], [AC_MSG_ERROR(GDI+ library not found)])],
 	[
@@ -62,7 +64,7 @@ AS_IF([test "${WIN32}" = "yes"],
 # Set compiler/linker flags
 AS_IF([test "${WIN32}" = "yes"],
 	[CXXFLAGS="$CXXFLAGS -DPW_GAMEDATADIR='\"data\\\\\"'"],
-	[CXXFLAGS="$CXXFLAGS -DPW_GAMEDATADIR='\"$datadir/$PACKAGE/\"'"]
+	[CXXFLAGS="$CXXFLAGS -DPW_GAMEDATADIR='\"./data/\"'"]
 )
 LIBS="$LIBS $OPENGL_LIBS"
 AS_IF([test "${WIN32}" = "yes"],
