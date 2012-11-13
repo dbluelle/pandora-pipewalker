@@ -34,6 +34,7 @@ const char* PWS_CPROP_RNDLVL =  "rndlvl";      ///< Random level map mode field
 const char* PWS_CPROP_LASTMAP = "last_lvl";    ///< Last map size
 const char* PWS_LEVEL_ID =      "id";          ///< Last level Id
 const char* PWS_LEVEL_STATE =   "state";       ///< Last level state
+const char* PWS_CPROP_PORTRAIT =   "portrait";       ///< Portrait mode field
 
 const char* PWS_FILENAME =      ".pipewalker"; ///< User settings file name
 
@@ -42,7 +43,8 @@ settings::settings()
 :	_debug_mode(false),
 	_rnd_lvl(false),
 	_sound(true),
-	_theme("Simple")
+	_theme("Simple"),
+	_portrait(false)
 {
 #ifndef NDEBUG
 	_debug_mode = true;
@@ -67,6 +69,7 @@ void settings::load()
 		inst._sound = sett.get_value(PWS_SECT_COMMON, PWS_CPROP_SOUND, inst._sound);
 		inst._theme = sett.get_value(PWS_SECT_COMMON, PWS_CPROP_THEME, inst._theme);
 		inst._last_level = sett.get_value(PWS_SECT_COMMON, PWS_CPROP_LASTMAP, inst._last_level);
+		inst._portrait = sett.get_value(PWS_SECT_COMMON, PWS_CPROP_PORTRAIT, inst._portrait);
 
 		for (size_t i = 0; i < 8; ++i) {
 			const char* section_name = inst.level_section_name(static_cast<level::size>(i / 2), (i % 2) != 0);
@@ -87,6 +90,7 @@ void settings::save()
 	sett.set_value(PWS_SECT_COMMON, PWS_CPROP_SOUND, inst._sound);
 	sett.set_value(PWS_SECT_COMMON, PWS_CPROP_THEME, inst._theme);
 	sett.set_value(PWS_SECT_COMMON, PWS_CPROP_LASTMAP, inst._last_level);
+	sett.set_value(PWS_SECT_COMMON, PWS_CPROP_PORTRAIT, inst._portrait);
 	for (size_t i = 0; i < 8; ++i) {
 		if (inst._states[i].id) {
 			const char* section_name = inst.level_section_name(static_cast<level::size>(i / 2), (i % 2) != 0);

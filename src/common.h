@@ -40,3 +40,6 @@ using namespace std;
 #define PW_SCREEN_WIDTH		400 //520	///< Initial screen (main window) width
 #define PW_SCREEN_HEIGHT	480 //620	///< Initial screen (main window) height
 #define PW_STARTX 200 
+#define PW_SCREEN_WIDTH_PORTRAIT	576 ///< Initial screen (main window) width in portrait mode
+#define PW_SCREEN_HEIGHT_PORTRAIT	480 ///< Initial screen (main window) height in portrait mode
+#define PW_STARTX_PORTRAIT 112 

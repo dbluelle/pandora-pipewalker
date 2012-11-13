@@ -83,8 +83,9 @@ public:
 
 	/**
 	 * Initialize render
+	 * \param portrait_mode flag for rendering in portrait mode
 	 */
-	void initialize();
+	void initialize(bool portrait_mode);
 
 	/**
 	 * Initialize image bank (load images from file)
@@ -98,7 +99,7 @@ public:
 	 * \param width new window width size
 	 * \param height new window height size
 	 */
-	void on_window_resize(const int width, const int height) const;
+	void on_window_resize(const int width, const int height,bool portrait_mode);
 
 	/**
 	 * Begin draw
@@ -180,4 +181,5 @@ private:
 private:
 	unsigned int _bank[counter]; ///< Texture bank
 	unsigned int _loading;       ///< "Loading..." texture
+	bool portrait;               ///< portrait mode flag
 };

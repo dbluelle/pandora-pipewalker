@@ -54,7 +54,12 @@ bool game::initialize(const unsigned long lvl_id, const level::size lvl_sz, cons
 
 	//Initialize render subsystem
 	render& renderer = render::instance();
-	renderer.initialize();
+	renderer.initialize(settings::portrait_mode());
+	if (settings::portrait_mode())
+	{
+		_wnd_height = PW_SCREEN_HEIGHT_PORTRAIT;
+		_wnd_width = PW_SCREEN_WIDTH_PORTRAIT;
+	}
 
 	//Load texture image
 	
@@ -78,7 +83,7 @@ bool game::initialize(const unsigned long lvl_id, const level::size lvl_sz, cons
 	//Initialize modes
 	_mode_puzzle.initialize();
 	_mode_sett.initialize(_mode_puzzle.current_level_size(), _mode_puzzle.current_wrap_mode(),
-		settings::rndlvl_mode(), settings::sound_mode());
+		settings::rndlvl_mode(), settings::sound_mode(),settings::portrait_mode());
 	_curr_mode = &_mode_puzzle;
 
 	return true;
@@ -128,8 +133,16 @@ void game::on_mouse_move(const int x, const int y)
 {
 	//Calculate new mouse world coordinates
 	assert(x >= 0 && x <= _wnd_width && y >= 0 && y <= _wnd_height);
-	_mouse_x = static_cast<float>(x) * (PW_BASE_WIDTH / static_cast<float>(_wnd_width)) - PW_BASE_WIDTH / 2.0f;
-	_mouse_y = PW_ASPECT_RATIO * (PW_BASE_WIDTH / 2.0f - static_cast<float>(y) * (PW_BASE_WIDTH / static_cast<float>(_wnd_height)));
+	if (settings::portrait_mode())
+	{
+		_mouse_x = PW_HALF_WIDTH - static_cast<float>(y) * (PW_BASE_WIDTH / static_cast<float>(_wnd_height));
+		_mouse_y = (PW_ASPECT_RATIO) * (PW_HALF_WIDTH - static_cast<float>(x-PW_STARTX_PORTRAIT) * (PW_BASE_WIDTH / static_cast<float>(_wnd_width)));
+	}
+	else
+	{
+		_mouse_x = static_cast<float>(x-PW_STARTX) * (PW_BASE_WIDTH / static_cast<float>(_wnd_width)) - PW_HALF_WIDTH;
+		_mouse_y = PW_ASPECT_RATIO * (PW_HALF_WIDTH - static_cast<float>(y) * (PW_BASE_WIDTH / static_cast<float>(_wnd_height)));
+	}
 
 #ifndef NDEBUG
 	printf("Mouse motion: %03i %03i on %.02f %.02f\n", x, y, _mouse_x, _mouse_y);
@@ -176,7 +189,7 @@ void game::on_window_resize(const int width, const int height)
 {
 	_wnd_width = width;
 	_wnd_height = height;
-	render::instance().on_window_resize(_wnd_width, _wnd_height);
+	render::instance().on_window_resize(_wnd_width, _wnd_height,settings::portrait_mode());
 }
 
 
@@ -258,6 +271,11 @@ void game::swap_mode()
 		_mode_puzzle.on_settings_changed(_mode_sett.level_size(), _mode_sett.wrap_mode());
 		settings::sound_mode(_mode_sett.sound_mode());
 		settings::rndlvl_mode(_mode_sett.random_mode());
+		settings::portrait_mode(_mode_sett.portrait_mode());
+		if (_mode_sett.portrait_mode())
+			on_window_resize(PW_SCREEN_WIDTH_PORTRAIT , PW_SCREEN_HEIGHT_PORTRAIT);
+		else
+			on_window_resize(PW_SCREEN_WIDTH, PW_SCREEN_HEIGHT);
 		_next_mode = &_mode_puzzle;
 	}
 	else {

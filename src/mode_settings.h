@@ -41,7 +41,7 @@ public:
 	 * \param rndm random mode in/off
 	 * \param sound sound mode in/off
 	 */
-	void initialize(const level::size sz, const bool wrap, const bool rndm, const bool sound);
+	void initialize(const level::size sz, const bool wrap, const bool rndm, const bool sound, const bool portrait);
 
 	/**
 	 * Reset state before show
@@ -53,6 +53,7 @@ public:
 	bool wrap_mode() const         { return _sett_wrap; }
 	bool random_mode() const       { return _sett_rnd; }
 	bool sound_mode() const        { return _sett_sound; }
+	bool portrait_mode() const     { return _sett_portrait; }
 
 private:
 	button          _btn_ok;     ///< OK button
@@ -64,9 +65,11 @@ private:
 	button          _prev_theme; ///< Previous theme button
 	button          _next_theme; ///< Next theme button
 	string          _theme_name; ///< Current theme name
+	button_chbox    _portrait_mode; ///< Portrait on/off checkbox
 
 	level::size     _sett_size;  ///< Current settings: level size
 	bool            _sett_wrap;  ///< Current settings: wrap mode
 	bool            _sett_rnd;   ///< Current settings: random level mode
 	bool            _sett_sound; ///< Current settings: sound mode
+	bool            _sett_portrait; ///< Current settings: portrait mode
 };

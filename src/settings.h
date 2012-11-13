@@ -71,6 +71,8 @@ public:
 	static void sound_mode(const bool mode)  { instance()._sound = mode; }
 	static const char* theme()               { return instance()._theme.c_str(); }
 	static void theme(const char* name)      { assert(name); instance()._theme = name; }
+	static bool portrait_mode()                 { return instance()._portrait; }
+	static void portrait_mode(const bool mode)  { instance()._portrait = mode; }
 	static level::size last_size();
 	static bool last_wrap();
 
@@ -143,4 +145,5 @@ private:
 	string      _theme;      ///< Default theme file
 	string      _last_level; ///< Last saved level name (one of PWS_SECT_LVL*)
 	level_state _states[8];  ///< Level states (8 = all sizes * wrap modes)
+	bool        _portrait;   ///<  Use portrait mode flag
 };

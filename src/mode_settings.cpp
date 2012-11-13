@@ -25,15 +25,17 @@
 mode_settings::mode_settings()
 :	_btn_ok(render::btn_ok, render::btn_ok_s, PW_BUTTON_X1, PW_BUTTON_Y),
 	_btn_cancel(render::btn_cancel, render::btn_cancel_s, PW_BUTTON_X4, PW_BUTTON_Y),
-	_wrap_mode (true, -0.6f, -0.3f, 0.7f),
-	_rnd_mode(false,  -0.6f, -1.0f, 0.7f),
+	_wrap_mode (true, -0.6f, 0.1f, 0.7f),
+	_rnd_mode(false,  -0.6f, -0.6f, 0.7f),
 	_sound_mode(true, -0.6f, -2.3f, 0.7f),
+	_portrait_mode(false, -0.6f, -1.3f, 0.7f),
 	_prev_theme(render::btn_prev, render::btn_prev_s, -2.3f, -3.5f, 0.7f),
 	_next_theme(render::btn_next, render::btn_next_s,  2.3f, -3.5f, 0.7f),
 	_sett_size(level::sz_normal),
 	_sett_wrap(true),
 	_sett_rnd(false),
-	_sett_sound(true)
+	_sett_sound(true),
+	_sett_portrait(false)
 {
 	_map_size[0].setup(false, -0.6f, 2.9f, 0.7f, level::sz_small);
 	_map_size[1].setup(false, -0.6f, 2.2f, 0.7f, level::sz_normal);
@@ -57,8 +59,9 @@ bool mode_settings::draw(const float alpha)
 	renderer.draw_text( 0.0f,  1.8f, 0.7f, alpha, "Big");
 	renderer.draw_text( 0.0f,  1.1f, 0.7f, alpha, "Extra");
 
-	renderer.draw_text( 0.0f,  0.0f, 0.7f, alpha, "Wrap mode");
-	renderer.draw_text( 0.0f, -0.7f, 0.7f, alpha, "Random");
+	renderer.draw_text( 0.0f,  0.4f, 0.7f, alpha, "Wrap mode");
+	renderer.draw_text( 0.0f, -0.3f, 0.7f, alpha, "Random");
+	renderer.draw_text( 0.0f, -1.0f, 0.7f, alpha, "Portrait");
 
 	renderer.draw_text(-4.6f, -2.0f, 0.7f, alpha, "Sound:");
 
@@ -79,6 +82,7 @@ bool mode_settings::draw(const float alpha)
 	redisplay |= _next_theme.draw(alpha);
 	redisplay |= _btn_ok.draw(alpha);
 	redisplay |= _btn_cancel.draw(alpha);
+	redisplay |= _portrait_mode.draw(alpha);
 
 	return redisplay;
 }
@@ -96,6 +100,7 @@ bool mode_settings::on_mouse_move(const float x, const float y)
 	redisplay |= _next_theme.on_mouse_move(x, y);
 	redisplay |= _btn_ok.on_mouse_move(x, y);
 	redisplay |= _btn_cancel.on_mouse_move(x, y);
+	redisplay |= _portrait_mode.on_mouse_move(x, y);
 
 	return redisplay;
 
@@ -114,6 +119,7 @@ bool mode_settings::on_mouse_click(const float x, const float y, const Uint8 btn
 		_sett_wrap = _wrap_mode.get_state();
 		_sett_rnd = _rnd_mode.get_state();
 		_sett_sound = _sound_mode.get_state();
+		_sett_portrait = _portrait_mode.get_state();
 		return true;
 	}
 
@@ -127,6 +133,8 @@ bool mode_settings::on_mouse_click(const float x, const float y, const Uint8 btn
 		_rnd_mode.invert_state();
 	else if (_sound_mode.cross(x, y))
 		_sound_mode.invert_state();
+	else if (_portrait_mode.cross(x, y))
+		_portrait_mode.invert_state();
 	else
 		_map_size.on_mouse_click(x, y);
 
@@ -134,20 +142,22 @@ bool mode_settings::on_mouse_click(const float x, const float y, const Uint8 btn
 }
 
 
-void mode_settings::initialize(const level::size sz, const bool wrap, const bool rndm, const bool sound)
+void mode_settings::initialize(const level::size sz, const bool wrap, const bool rndm, const bool sound, const bool portrait)
 {
 	_map_size.set_state(sz);
 	_wrap_mode.set_state(wrap);
 	_rnd_mode.set_state(rndm);
 	_sound_mode.set_state(sound);
+	_portrait_mode.set_state(portrait);
 	_sett_size = sz;
 	_sett_wrap = wrap;
 	_sett_rnd = rndm;
 	_sett_sound = sound;
+	_sett_portrait = portrait;
 }
 
 
 void mode_settings::reset()
 {
-	initialize(_sett_size, _sett_wrap, _sett_rnd, _sett_sound);
+	initialize(_sett_size, _sett_wrap, _sett_rnd, _sett_sound,_sett_portrait);
 }

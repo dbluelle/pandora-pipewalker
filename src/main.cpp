@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 				{
 					Sint32 x, y;
 					SDL_GetMouseState(&x, &y);
-					game_instance.on_mouse_move(x-PW_STARTX, y);
+					game_instance.on_mouse_move(x, y);
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:

@@ -36,7 +36,7 @@
 
 
 render::render()
-	: _loading(0)
+	: _loading(0),portrait(false)
 {
 	memset(_bank, 0, sizeof(_bank));
 }
@@ -57,7 +57,7 @@ render& render::instance()
 }
 
 
-void render::initialize()
+void render::initialize(bool portrait_mode)
 {
 	//GL attributes
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE,     5);
@@ -81,7 +81,10 @@ void render::initialize()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	on_window_resize(PW_SCREEN_WIDTH, PW_SCREEN_HEIGHT);
+	if (portrait_mode)
+		on_window_resize(PW_SCREEN_WIDTH_PORTRAIT , PW_SCREEN_HEIGHT_PORTRAIT,portrait_mode);
+	else
+		on_window_resize(PW_SCREEN_WIDTH, PW_SCREEN_HEIGHT,portrait_mode);
 
 	assert(check_GL_error());
 }
@@ -176,15 +179,16 @@ bool render::load(const char* file_name)
 }
 
 
-void render::on_window_resize(const int width, const int height) const
+void render::on_window_resize(const int width, const int height,bool portrait_mode)
 {
-	glViewport(PW_STARTX, 0, width, height);
+	portrait = portrait_mode;
+	glViewport(portrait ? PW_STARTX_PORTRAIT : PW_STARTX, 0, width, height);
 }
 
 
 void render::draw_begin() const
 {
-	GLint gl_viewport[4];
+ 	GLint gl_viewport[4];
 	glGetIntegerv(GL_VIEWPORT, gl_viewport);
 	const float wnd_width = static_cast<float>(gl_viewport[2]);
 	const float wnd_height = static_cast<float>(gl_viewport[3]);
@@ -198,6 +202,8 @@ void render::draw_begin() const
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	if (portrait)
+		glRotatef(90, 0, 0, 1);
 	glOrtho(
 		0.0 - PW_HALF_WIDTH,	                   0.0 + PW_HALF_WIDTH,
 		0.0 - PW_HALF_WIDTH * PW_ASPECT_RATIO, 0.0 + PW_HALF_WIDTH * PW_ASPECT_RATIO,
@@ -364,6 +370,8 @@ void render::show_loading()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	if (portrait)
+		glRotatef(90, 0, 0, 1);
 	glOrtho(
 		0.0 - PW_HALF_WIDTH,	                   0.0 + PW_HALF_WIDTH,
 		0.0 - PW_HALF_WIDTH * PW_ASPECT_RATIO, 0.0 + PW_HALF_WIDTH * PW_ASPECT_RATIO,
